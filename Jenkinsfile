@@ -22,6 +22,7 @@ stage('Promote Development to Master') {
 when {
 branch 'development'
 }
+
 steps {
 echo 'Stashing Local Changes'
 sh 'git stash'
@@ -34,6 +35,15 @@ echo 'Merging Development into Master'
 sh 'git merge development'
 echo 'Git Push to Origin'
 sh 'git push origin master'
+}
+}
+stage('Tagging the Release') {
+when{
+branch 'master'
+}
+steps {
+sh "git tag rectangle-${env.MAJOR_VERSION}.${BUILD_NUMBER}"
+sh "git push origin rectangle-${env.MAJOR_VERSION}.${BUILD_NUMBER}"
 }
 }
 }
